@@ -5,13 +5,19 @@ const Header = ({course}) => {
   )
 }
 
+const Part = ({module}) => {
+  return (
+    <p>{module.part} {module.exercises}</p>
+  )
+}
+
 const Content = ({modules}) => {
   return (
-    <>
-      {modules.map((module, i) => {
-        return <p key={i}>{module.part} {module.exercises}</p>
-      })}
-    </>
+    <div>
+      <Part module={modules[0]}/>
+      <Part module={modules[1]}/>
+      <Part module={modules[2]}/>
+    </div>
   )
 }
 
