@@ -17,8 +17,10 @@ const Content = ({ parts }) => {
 }
 
 const Course = ({course}) => {
-  let sumTotal = 0;
-  course.parts.map(part=> sumTotal += part.exercises);
+  const sumTotal = course.parts.reduce((s, p) => {
+    console.log('what is happening', s, p)
+    return s + p.exercises
+  }, 0)
 
   return (
     <>
