@@ -33,17 +33,19 @@ const App = () => {
   const handleNewContact = (event) => {
     event.preventDefault();
 
-    const contactExists = persons.filter((person) => person.name == newName.trim())
-
-    if (contactExists.length > 0) {
-      alert(`${newName} is already added to phonebook`)
+    const existingContact = persons.filter((person) => person.name == newName.trim())
+    if (existingContact.length > 0) {
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+        const updatedPerson = {...existingContact[0], name: newName, number: newNumber}
+        personServices.updatePerson(updatedPerson)
+        setPersons(persons.map(person => person.id !== existingContact[0].id ? person : updatedPerson))
+      }
     } else if (newName.length == 0 || newNumber.length == 0) {
       alert('Please fill in all the fields');
       return;
     } else {
       const newPerson = {name: newName, number: newNumber}
-      personServices.addPerson(newPerson)
-      setPersons(persons.concat(newPerson))
+      personServices.addPerson(newPerson).then(res => setPersons(persons.concat(res)))
     }
     setNewName('');
     setNewNumber('');

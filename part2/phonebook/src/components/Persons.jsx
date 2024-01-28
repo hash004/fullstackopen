@@ -20,7 +20,7 @@ const Persons = ({ persons, handleDelete }) => {
   return (
     <>
     {persons.map(person=> (
-      <Person key={person.name} person={person} handleDelete={handleDelete} />
+      <Person key={person.id} person={person} handleDelete={handleDelete} />
     ))}
     </>
   )
