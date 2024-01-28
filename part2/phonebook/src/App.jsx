@@ -10,7 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [message, setMessage] = useState({text: null, type: null});
 
   useEffect(()=>{
     personServices
@@ -39,12 +39,22 @@ const App = () => {
     if (existingContact.length > 0) {
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
         const updatedPerson = {...existingContact[0], name: newName, number: newNumber}
-        personServices.updatePerson(updatedPerson)
+        personServices
+          .updatePerson(updatedPerson)
+          .catch(error => {
+            setMessage(
+              {
+                text: `Information of ${newName} has already been removed from server`,
+                type: 'error'
+              }
+            )
+            console.log('Error updating contact: ', error);
+          })
         setPersons(persons.map(person => person.id !== existingContact[0].id ? person : updatedPerson))
-        setSuccessMessage(`${newName}'s number has been changed`)
+        setMessage({text: `${newName}'s number has been changed`, type: 'success'})
         setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
+          setMessage({text: null, type: null})
+        }, 3000)
       }
     } else if (newName.length == 0 || newNumber.length == 0) {
       alert('Please fill in all the fields');
@@ -52,10 +62,10 @@ const App = () => {
     } else {
       const newPerson = {name: newName, number: newNumber}
       personServices.addPerson(newPerson).then(res => setPersons(persons.concat(res)))
-      setSuccessMessage(`Added ${newName}`)
+      setMessage({text: `Added ${newName}`, type:'success'})
       setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
+        setMessage({text: null, type: null})
+      }, 3000)
     }
     setNewName('');
     setNewNumber('');
@@ -73,7 +83,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <Notification message={message} />
       <Filter filter={filter} onChange={handleFilterChange} />
       <h3>add a new</h3>
       <PersonForm 
