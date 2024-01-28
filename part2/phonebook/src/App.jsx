@@ -3,6 +3,7 @@ import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import personServices from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -41,7 +42,9 @@ const App = () => {
       alert('Please fill in all the fields');
       return;
     } else {
-      setPersons(persons.concat({name: newName, number: newNumber}))
+      const newPerson = {name: newName, number: newNumber}
+      personServices.addPerson(newPerson)
+      setPersons(persons.concat(newPerson))
     }
     setNewName('');
     setNewNumber('');
